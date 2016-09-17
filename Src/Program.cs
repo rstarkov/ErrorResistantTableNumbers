@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TableNumbers
 {
@@ -10,15 +8,25 @@ namespace TableNumbers
     {
         static void Main(string[] args)
         {
-            var rnd = new Random();
+            var rnd = new Random(12345);
 
             int bestLength = 0;
             int bestDupes = 0;
             string bestHighest = null;
             var bestAssignment = new HashSet<string>();
 
+            int trials = 0;
+            var start = DateTime.UtcNow;
+
             while (true)
             {
+                trials++;
+                if (trials > 500)
+                {
+                    Console.WriteLine((DateTime.UtcNow - start).TotalSeconds);
+                    return;
+                }
+
                 var unavailable = new Dictionary<string, int>();
                 var assignment = new HashSet<string>();
                 var table = 0;
