@@ -28,7 +28,6 @@ namespace TableNumbers
                 var unavailable = new bool[10000];
                 var unavailableCount = 0;
                 var assignment = new List<int>();
-                var table = 1;
                 while (unavailableCount < unavailable.Length)
                 {
                     int num;
@@ -52,7 +51,6 @@ namespace TableNumbers
                     for (int digit = 0, mask = 1; digit < 4; digit++, mask *= 10)
                     {
                         int maskednum = num - (num % (mask * 10) - num % mask);
-
                         for (int i = 0; i <= 9; i++)
                         {
                             var variant = maskednum + i * mask;
@@ -64,12 +62,11 @@ namespace TableNumbers
                         }
                     }
                     assignment.Add(num);
-                    table++;
                 }
 
-                if (bestLength < table)
+                if (bestLength < assignment.Count)
                 {
-                    bestLength = table;
+                    bestLength = assignment.Count;
                     bestAssignment = assignment;
                     Console.WriteLine($"\r\n{bestLength}\r\n{string.Join(",", bestAssignment.OrderBy(a => a))}");
                 }
