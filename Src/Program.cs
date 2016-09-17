@@ -12,8 +12,8 @@ namespace TableNumbers
 
             int bestLength = 0;
             int bestDupes = 0;
-            string bestHighest = null;
-            var bestAssignment = new HashSet<string>();
+            int bestHighest = int.MaxValue;
+            var bestAssignment = new HashSet<int>();
 
             int trials = 0;
             var start = DateTime.UtcNow;
@@ -26,22 +26,27 @@ namespace TableNumbers
                     Console.WriteLine((DateTime.UtcNow - start).TotalSeconds);
                     return;
                 }
-
-                var unavailable = new Dictionary<string, int>();
-                var assignment = new HashSet<string>();
-                var table = 0;
-                while (unavailable.Count < 10000)
+                var unavailable = new int[10000];
+                var unavailableCount = 0;
+                var assignment = new HashSet<int>();
+                var table = 1;
+                while (unavailableCount < unavailable.Length)
                 {
-                    var num = $"{rnd.Next(0, 10000):0000}";
-                    while (unavailable.ContainsKey(num))
-                        num = $"{rnd.Next(0, 10000):0000}";
-                    foreach (var variant in variants(num))
-                        unavailable[variant] = table;
+                    var num = rnd.Next(0, unavailable.Length);
+                    while (unavailable[num] > 0)
+                        num = rnd.Next(0, unavailable.Length);
+                    foreach (var variant in variants($"{num:0000}"))
+                    {
+                        int varianti = int.Parse(variant);
+                        if (unavailable[varianti] == 0)
+                            unavailableCount++;
+                        unavailable[varianti] = table;
+                    }
                     assignment.Add(num);
                     table++;
                 }
 
-                var dupes = assignment.Sum(a => (a[0] == a[1] ? 1 : 0) + (a[1] == a[2] ? 1 : 0) + (a[2] == a[3] ? 1 : 0));
+                var dupes = assignment.Select(a => $"{a:0000}").Sum(a => (a[0] == a[1] ? 1 : 0) + (a[1] == a[2] ? 1 : 0) + (a[2] == a[3] ? 1 : 0));
                 if (bestLength < table)
                 {
                     bestLength = table;
