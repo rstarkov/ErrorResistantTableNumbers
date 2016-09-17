@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xorshift;
 
 namespace TableNumbers
 {
@@ -8,7 +9,7 @@ namespace TableNumbers
     {
         static void Main(string[] args)
         {
-            var rnd = new Random(12345);
+            var rnd = new RndXorshift(10000);
 
             int bestLength = 0;
             var bestAssignment = new List<int>();
@@ -30,9 +31,9 @@ namespace TableNumbers
                 var table = 1;
                 while (unavailableCount < unavailable.Length)
                 {
-                    var num = rnd.Next(0, unavailable.Length);
+                    var num = (int) rnd.Next();
                     while (unavailable[num])
-                        num = rnd.Next(0, unavailable.Length);
+                        num = (int) rnd.Next();
                     for (int digit = 0; digit < 4; digit++)
                     {
                         int mask = 1;
