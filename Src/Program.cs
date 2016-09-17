@@ -21,27 +21,27 @@ namespace TableNumbers
             while (true)
             {
                 trials++;
-                if (trials > 500)
+                if (trials > 5000)
                 {
                     Console.WriteLine((DateTime.UtcNow - start).TotalSeconds);
                     return;
                 }
-                var unavailable = new int[10000];
+                var unavailable = new bool[10000];
                 var unavailableCount = 0;
                 var assignment = new HashSet<int>();
                 var table = 1;
                 while (unavailableCount < unavailable.Length)
                 {
                     var num = rnd.Next(0, unavailable.Length);
-                    while (unavailable[num] > 0)
+                    while (unavailable[num])
                         num = rnd.Next(0, unavailable.Length);
-                    foreach (var variant in variants($"{num:0000}"))
-                    {
-                        int varianti = int.Parse(variant);
-                        if (unavailable[varianti] == 0)
-                            unavailableCount++;
-                        unavailable[varianti] = table;
-                    }
+                    for (int digit = 0; digit < 4; digit++)
+                        foreach (var variant in variants(num, digit))
+                            if (!unavailable[variant])
+                            {
+                                unavailableCount++;
+                                unavailable[variant] = true;
+                            }
                     assignment.Add(num);
                     table++;
                 }
@@ -69,16 +69,16 @@ namespace TableNumbers
             }
         }
 
-        static IEnumerable<string> variants(string num)
+        static IEnumerable<int> variants(int num, int digit)
         {
+            int mask = 1;
+            for (int i = 0; i < digit; i++)
+                mask *= 10;
+
+            num = num - (num % (mask * 10) - num % mask);
+
             for (int i = 0; i <= 9; i++)
-                yield return num.Remove(0, 1).Insert(0, i.ToString());
-            for (int i = 0; i <= 9; i++)
-                yield return num.Remove(1, 1).Insert(1, i.ToString());
-            for (int i = 0; i <= 9; i++)
-                yield return num.Remove(2, 1).Insert(2, i.ToString());
-            for (int i = 0; i <= 9; i++)
-                yield return num.Remove(3, 1).Insert(3, i.ToString());
+                yield return num + i * mask;
         }
     }
 }
