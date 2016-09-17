@@ -20,7 +20,7 @@ namespace TableNumbers
             while (true)
             {
                 trials++;
-                if (trials > 10000)
+                if (trials > 30000)
                 {
                     Console.WriteLine((DateTime.UtcNow - start).TotalSeconds);
                     return;
@@ -49,12 +49,8 @@ namespace TableNumbers
                         }
                     }
 
-                    for (int digit = 0; digit < 4; digit++)
+                    for (int digit = 0, mask = 1; digit < 4; digit++, mask *= 10)
                     {
-                        int mask = 1;
-                        for (int i = 0; i < digit; i++)
-                            mask *= 10;
-
                         int maskednum = num - (num % (mask * 10) - num % mask);
 
                         for (int i = 0; i <= 9; i++)
