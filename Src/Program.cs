@@ -21,7 +21,7 @@ namespace TableNumbers
             while (true)
             {
                 trials++;
-                if (trials > 5000)
+                if (trials > 10000)
                 {
                     Console.WriteLine((DateTime.UtcNow - start).TotalSeconds);
                     return;
@@ -36,12 +36,23 @@ namespace TableNumbers
                     while (unavailable[num])
                         num = rnd.Next(0, unavailable.Length);
                     for (int digit = 0; digit < 4; digit++)
-                        foreach (var variant in variants(num, digit))
+                    {
+                        int mask = 1;
+                        for (int i = 0; i < digit; i++)
+                            mask *= 10;
+
+                        int maskednum = num - (num % (mask * 10) - num % mask);
+
+                        for (int i = 0; i <= 9; i++)
+                        {
+                            var variant = maskednum + i * mask;
                             if (!unavailable[variant])
                             {
                                 unavailableCount++;
                                 unavailable[variant] = true;
                             }
+                        }
+                    }
                     assignment.Add(num);
                     table++;
                 }
@@ -67,18 +78,6 @@ namespace TableNumbers
                     }
                 }
             }
-        }
-
-        static IEnumerable<int> variants(int num, int digit)
-        {
-            int mask = 1;
-            for (int i = 0; i < digit; i++)
-                mask *= 10;
-
-            num = num - (num % (mask * 10) - num % mask);
-
-            for (int i = 0; i <= 9; i++)
-                yield return num + i * mask;
         }
     }
 }
