@@ -92,22 +92,27 @@ namespace TableNumbers
 
         private static unsafe void FillBuffer()
         {
+            uint x = _x, y = _y, z = _z, w = _w;
             fixed (uint* pbytes = _buffer)
             {
                 uint* pbuf = pbytes;
                 uint* pend = pbytes + _buffer.Length;
                 while (pbuf < pend)
                 {
-                    uint tx = _x ^ (_x << 11);
-                    uint ty = _y ^ (_y << 11);
-                    uint tz = _z ^ (_z << 11);
-                    uint tw = _w ^ (_w << 11);
-                    *(pbuf++) = _x = _w ^ (_w >> 19) ^ (tx ^ (tx >> 8));
-                    *(pbuf++) = _y = _x ^ (_x >> 19) ^ (ty ^ (ty >> 8));
-                    *(pbuf++) = _z = _y ^ (_y >> 19) ^ (tz ^ (tz >> 8));
-                    *(pbuf++) = _w = _z ^ (_z >> 19) ^ (tw ^ (tw >> 8));
+                    uint tx = x ^ (x << 11);
+                    uint ty = y ^ (y << 11);
+                    uint tz = z ^ (z << 11);
+                    uint tw = w ^ (w << 11);
+                    *(pbuf++) = x = w ^ (w >> 19) ^ (tx ^ (tx >> 8));
+                    *(pbuf++) = y = x ^ (x >> 19) ^ (ty ^ (ty >> 8));
+                    *(pbuf++) = z = y ^ (y >> 19) ^ (tz ^ (tz >> 8));
+                    *(pbuf++) = w = z ^ (z >> 19) ^ (tw ^ (tw >> 8));
                 }
             }
+            _x = x;
+            _y = y;
+            _z = z;
+            _w = w;
         }
     }
 }
