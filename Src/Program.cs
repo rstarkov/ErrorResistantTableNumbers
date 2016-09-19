@@ -8,7 +8,7 @@ namespace TableNumbers
     {
         static void Main(string[] args)
         {
-            _modulus = 10000;
+            _modulus = 1000;
             _rejectionLimit = (uint.MaxValue / _modulus) * _modulus;
 
             int bestLength = 0;
@@ -16,7 +16,7 @@ namespace TableNumbers
 
             while (true)
             {
-                var unavailable = new bool[10000];
+                var unavailable = new bool[1000];
                 var unavailableCount = 0;
                 var assignment = new List<int>();
                 while (unavailableCount < unavailable.Length)
@@ -39,7 +39,7 @@ namespace TableNumbers
                         }
                     }
 
-                    for (int digit = 0, mask = 1; digit < 4; digit++, mask *= 10)
+                    for (int digit = 0, mask = 1; digit < 3; digit++, mask *= 10)
                     {
                         int maskednum = num - (num % (mask * 10) - num % mask);
                         for (int i = 0; i <= 9; i++)
