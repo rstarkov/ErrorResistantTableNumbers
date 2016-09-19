@@ -8,19 +8,23 @@ namespace TableNumbers
     {
         static void Main(string[] args)
         {
+            // PRNG constants
             _modulus = 1000;
             _rejectionLimit = (uint.MaxValue / _modulus) * _modulus;
 
+            // Best result storage
             int bestLength = 0;
             var bestAssignment = new List<int>();
 
             while (true)
             {
+                // Greedy random search for numbers that don't "interfere" with any of the numbers that have already been added to the set.
                 var unavailable = new bool[1000];
                 var unavailableCount = 0;
                 var assignment = new List<int>();
                 while (unavailableCount < unavailable.Length)
                 {
+                    // Generate random numbers until one is found which has not been previously marked as one which would be a single digit error away from a number that's already in the set
                     int num;
                     while (true)
                     {
@@ -31,7 +35,7 @@ namespace TableNumbers
                         }
                         uint result = _buffer[_bufferPos];
                         _bufferPos++;
-                        if (result < _rejectionLimit)
+                        if (result < _rejectionLimit) // rejection sampling to keep the random numbers uniformly distributed
                         {
                             num = (int) (result % _modulus);
                             if (!unavailable[num])
@@ -39,6 +43,7 @@ namespace TableNumbers
                         }
                     }
 
+                    // Mark every number that differs by a single digit from the chosen number as unavailable
                     for (int digit = 0, mask = 1; digit < 3; digit++, mask *= 10)
                     {
                         int maskednum = num - (num % (mask * 10) - num % mask);
@@ -52,9 +57,12 @@ namespace TableNumbers
                             }
                         }
                     }
+
+                    // Add this number to the set
                     assignment.Add(num);
                 }
 
+                // Store / print if this set is at least as large as the largest set found so far
                 if (bestLength <= assignment.Count)
                 {
                     bestLength = assignment.Count;
@@ -63,6 +71,8 @@ namespace TableNumbers
                 }
             }
         }
+
+        // Fast XorShift PRNG - see http://roman.st/Article/Faster-Marsaglia-Xorshift-pseudo-random-generator-in-unsafe-C
 
         private static uint _modulus;
         private static uint _rejectionLimit;
