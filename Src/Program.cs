@@ -14,17 +14,8 @@ namespace TableNumbers
             int bestLength = 0;
             var bestAssignment = new List<int>();
 
-            int trials = 0;
-            var start = DateTime.UtcNow;
-
             while (true)
             {
-                trials++;
-                if (trials > 30000)
-                {
-                    Console.WriteLine((DateTime.UtcNow - start).TotalSeconds);
-                    return;
-                }
                 var unavailable = new bool[10000];
                 var unavailableCount = 0;
                 var assignment = new List<int>();
