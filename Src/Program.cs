@@ -55,7 +55,7 @@ namespace TableNumbers
                     assignment.Add(num);
                 }
 
-                if (bestLength < assignment.Count)
+                if (bestLength <= assignment.Count)
                 {
                     bestLength = assignment.Count;
                     bestAssignment = assignment;
